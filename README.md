@@ -151,7 +151,7 @@ Skills, permissions, Goals, and Automations. See the
 
 ## News
 
-**2026-09-06 · Session context-window caps, compaction that leaves a memory, and a fully localized Desktop**
+**2026-09-06 · DeepCode v2.2.0: Session context-window caps, compaction that leaves a memory, and a fully localized Desktop**
 
 - **Cap a Session's context window.** `/context 64k` in the TUI or the
   preset next to the Desktop model picker narrows the model's published

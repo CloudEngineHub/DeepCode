@@ -150,7 +150,7 @@ Automations。从源码启动请参考
 
 ## 新闻
 
-**2026-09-06 · Session 上下文窗口上限、会留下记忆的压缩，以及完整本地化的 Desktop**
+**2026-09-06 · DeepCode v2.2.0：Session 上下文窗口上限、会留下记忆的压缩，以及完整本地化的 Desktop**
 
 - **给 Session 的上下文窗口设上限。** TUI 里的 `/context 64k` 或 Desktop 模型
   选择器旁的预设，可以把模型公布的窗口收窄给后续 Turn 使用；上限会冻结进每个
