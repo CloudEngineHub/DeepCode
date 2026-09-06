@@ -47,18 +47,25 @@ def description_quality_issues(description: str) -> list[str]:
     return issues
 
 
-def sanitize_description(description: str, *, name: str = "tool") -> str:
-    """Bound + degenerate-fallback a description to the P1-2 contract.
+def sanitize_description(
+    description: str,
+    *,
+    name: str = "tool",
+    max_chars: int = _DESCRIPTION_MAX_CHARS,
+) -> str:
+    """Bound + degenerate-fallback a tool description.
 
     Truncates over-long descriptions at a sentence boundary and replaces
     unusable ones (empty or pure placeholder text) with the tool name so the
     model still has *something* to route on — never an empty string.
+    ``max_chars`` lets callers with a different budget (remote MCP tools keep
+    their historical 8,000-character allowance) reuse the same rules.
     """
     text = str(description or "").strip()
-    if len(text) <= _DESCRIPTION_MAX_CHARS:
+    if len(text) <= max_chars:
         return text or f"{name} tool (no description provided)"
     # Truncate at the last sentence end within the cap.
-    cut = text[:_DESCRIPTION_MAX_CHARS]
+    cut = text[:max_chars]
     boundary = max(cut.rfind(". "), cut.rfind(".\n"), cut.rfind("\n"))
     if boundary > _DESCRIPTION_MIN_CHARS:
         cut = cut[: boundary + 1]

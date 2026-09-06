@@ -497,30 +497,22 @@ class AgentSession:
     def _make_compaction_summary_sink(self):
         """P1-5: build the compaction → memory deposit callable (never raises).
 
-        The sink runs the memory write on a daemon thread (non-blocking, like
-        memory distillation) so compaction never stalls the turn. Fires the
-        P1-3 canonical ``memory.compaction.deposited`` event on success.
+        The sink runs the memory write on a daemon thread (non-blocking) so
+        compaction never stalls the turn. Without a workspace there is no
+        memory directory to write to, so the sink is a no-op.
         """
 
         def _deposit(summary: str, anchor: dict[str, Any] | None = None) -> None:
             import threading
+
+            if self._workspace is None:
+                return
 
             def _work() -> None:
                 try:
                     from core.harness.memory import write_compaction_summary
 
                     write_compaction_summary(self._workspace, summary, anchor)
-                    try:
-                        from core.observability.events import emit_event
-
-                        emit_event(
-                            "memory.compaction.deposited",
-                            session=(anchor or {}).get("session_key"),
-                            chars=len(summary or ""),
-                            phase=(anchor or {}).get("phase"),
-                        )
-                    except Exception:  # noqa: BLE001, S110
-                        pass
                 except Exception:  # noqa: BLE001 - memory work never breaks turns
                     logger.debug("compaction summary deposit failed", exc_info=True)
 

@@ -114,8 +114,13 @@ def test_mcp_description_empty_gets_fallback():
 
 
 def test_mcp_description_truncated_to_budget():
+    from core.mcp.tools import _MCP_DESCRIPTION_MAX_CHARS
+
     adapter = _make_adapter("word " * 5_000)
-    assert len(adapter.description) <= _DESCRIPTION_MAX_CHARS + 32
+    # Remote MCP descriptions keep their historical 8,000-character allowance,
+    # wider than the built-in tool budget.
+    assert _MCP_DESCRIPTION_MAX_CHARS > _DESCRIPTION_MAX_CHARS
+    assert len(adapter.description) <= _MCP_DESCRIPTION_MAX_CHARS + 32
     assert adapter.description.endswith("…[truncated]")
 
 
