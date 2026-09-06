@@ -151,6 +151,21 @@ Skills, permissions, Goals, and Automations. See the
 
 ## News
 
+**2026-09-06 · Session context-window caps, compaction that leaves a memory, and a fully localized Desktop**
+
+- **Cap a Session's context window.** `/context 64k` in the TUI or the
+  preset next to the Desktop model picker narrows the model's published
+  window for future Turns; the cap is frozen into each accepted Turn and
+  feeds the compaction gate directly. `/context auto` follows the model
+  again. (#203)
+- **Compaction leaves a note in memory, and memory notes cannot escape their
+  boundary.** A compaction summary is deposited into the workspace memory on
+  a background thread, and injected memory content is wrapped in an
+  `<untrusted-data>` boundary whose closing tags are escaped, so a poisoned
+  note cannot forge instructions. (#204)
+- **Appearance settings speak Simplified Chinese too**, completing the
+  Desktop shell's zh-CN coverage. (#202)
+
 **2026-09-03 · Desktop catalog race, an honest command screen, GLM-5.2, and two dependency bumps**
 
 - **Switching projects no longer strands the MCP catalog.** A probe or
