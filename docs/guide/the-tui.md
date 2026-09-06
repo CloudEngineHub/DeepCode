@@ -29,6 +29,7 @@ cancel (a first `Esc` clears your filter, a second closes).
 | `/delete <id>` | Permanently delete a stored session |
 | `/model [connection] [id]` | Show or switch connection/model — the picker shows every configured connection's full catalog |
 | `/effort [auto\|off\|level]` | Reasoning effort for the *next* turns |
+| `/context [auto\|tokens]` | Context-window cap for the *next* turns — `64k`, `1m`, or `auto` to follow the model's published window |
 | `/permissions [preset]` | Tool access: `ask` · `read-only` · `full-access` · `inherit` |
 | `/transcript [mode]` | Same three modes `Ctrl+O` cycles |
 | `/preset [id\|clear]` | Agent presets — selectable only while the conversation is still blank |

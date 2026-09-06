@@ -3671,7 +3671,8 @@
           "minLength": 1
         },
         "contextWindow": {
-          "type": "integer",
+          "description": "Optional Session cap for future Turns. Omit or pass null to follow the model's published window.",
+          "type": ["integer", "null"],
           "minimum": 4096,
           "maximum": 10000000
         },

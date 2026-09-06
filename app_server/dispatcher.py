@@ -898,19 +898,40 @@ class Dispatcher:
             mode = ThreadMode(raw_mode)
         except ValueError as exc:
             raise InvalidParams("unsupported thread mode") from exc
+        project_id = str(params.string("projectId"))
+        connection_id = params.string("connectionId", required=False)
+        model = params.string("model", required=False)
+        reasoning_effort = params.string("reasoningEffort", required=False)
+        context_window = params.optional_integer(
+            "contextWindow",
+            minimum=MIN_CONTEXT_WINDOW_TOKENS,
+            maximum=MAX_CONTEXT_WINDOW_TOKENS,
+        )
+        workspace_path = params.string("workspacePath", required=False)
+        if context_window is not None:
+            # Validate an explicit cap against the model's published window
+            # before the thread is persisted, the same way
+            # thread/execution/update does; otherwise the first Turn would be
+            # the one to reject it.
+            project = self.application.projects.read(project_id)
+            self.application.llm.resolve(
+                workspace_path or project.canonical_path,
+                ExecutionSelection(
+                    connection_id=connection_id,
+                    model_id=model,
+                    reasoning_effort=reasoning_effort,
+                    context_window=context_window,
+                ),
+            )
         thread = self.application.threads.start(
-            str(params.string("projectId")),
+            project_id,
             title=str(params.string("title")),
             mode=mode,
-            connection_id=params.string("connectionId", required=False),
-            model=params.string("model", required=False),
-            reasoning_effort=params.string("reasoningEffort", required=False),
-            context_window=params.optional_integer(
-                "contextWindow",
-                minimum=MIN_CONTEXT_WINDOW_TOKENS,
-                maximum=MAX_CONTEXT_WINDOW_TOKENS,
-            ),
-            workspace_path=params.string("workspacePath", required=False),
+            connection_id=connection_id,
+            model=model,
+            reasoning_effort=reasoning_effort,
+            context_window=context_window,
+            workspace_path=workspace_path,
             parent_thread_id=params.string("parentThreadId", required=False),
             agent_preset=params.string("agentPreset", required=False),
         )

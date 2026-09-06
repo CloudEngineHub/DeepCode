@@ -376,7 +376,10 @@ export interface ThreadStartParams {
   connectionId?: string;
   model?: string;
   reasoningEffort?: string;
-  contextWindow?: number;
+  /**
+   * Optional Session cap for future Turns. Omit or pass null to follow the model's published window.
+   */
+  contextWindow?: number | null;
   workspacePath?: string;
   parentThreadId?: string;
   agentPreset?: string;
